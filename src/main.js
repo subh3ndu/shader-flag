@@ -17,10 +17,10 @@ const canvas = {
 };
 
 const scene = new THREE.Scene();
-scene.add(new THREE.AxesHelper(1));
+// scene.add(new THREE.AxesHelper(1));
 
 const camera = new THREE.PerspectiveCamera(75, canvas.aspect, 0.01, 100);
-camera.position.set(1, 1, 1);
+camera.position.set(2, 2, 3);
 scene.add(camera);
 
 const control = new OrbitControls(camera, canvas.dom);
@@ -39,7 +39,7 @@ const textureLoader = new THREE.TextureLoader(loadingManager);
 const geometry = new THREE.PlaneGeometry(3, 2, 100, 100);
 
 // Material
-const material = new THREE.RawShaderMaterial({
+const material = new THREE.ShaderMaterial({
   transparent: true,
   // wireframe: true,
 
@@ -47,9 +47,11 @@ const material = new THREE.RawShaderMaterial({
   fragmentShader,
 
   uniforms: {
-    uFrequency: { value: new THREE.Vector2(10, 5) },
+    uFrequency: { value: new THREE.Vector2(5, 2) },
     uTime: { value: 0 },
-    uMap: { value: textureLoader.load("/flag.jpg") },
+    uTexture: {
+      value: textureLoader.load(`${import.meta.env.BASE_URL}/flag.jpg`),
+    },
   },
 
   side: THREE.DoubleSide,
@@ -58,7 +60,10 @@ const material = new THREE.RawShaderMaterial({
 gui.add(material.uniforms.uFrequency.value, "x").min(0).max(20).step(0.01);
 gui.add(material.uniforms.uFrequency.value, "y").min(0).max(20).step(0.01);
 
-scene.add(new THREE.Mesh(geometry, material));
+const mesh = new THREE.Mesh(geometry, material);
+// mesh.scale.y = 2 / 3;
+
+scene.add(mesh);
 
 /*
  * Renderer
